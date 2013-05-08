@@ -24,9 +24,6 @@ title = "Charts"
       fill: #2A8F79;
       stroke: 0px;
     }
-    rect.bar:hover {
-      fill: #63BDA9;
-    }
     .axis path, .axis line {
       fill: none;
       stroke: #000;
@@ -93,18 +90,26 @@ title = "Charts"
 <script>
     $(document).ready(function()
     {
-        var margin = { top: 0, right: 20, bottom:10 , left: 0 };
-        var width = 480 - margin.right - margin.left;
-        var height = 100 - margin.top - margin.bottom;
+        var outerHeight = 100;
+        var outerWidth  = 480;
+
+        var margin = { top: 0, right: 20, bottom:20 , left: 0 };
+        var width = outerWidth - margin.right - margin.left;
+        var height = outerHeight - margin.top - margin.bottom;
 
         function barChart(data, element, accessor) {
-          var svg = d3.select(element).append("svg")
+          var svg = d3.select(element).append("svg");
+          svg.attr({
+            width: outerWidth,
+            height: outerHeight
+          });
+
           var g = svg.append("g")
               .attr("transform","translate(" + margin.left + "," + margin.top + ")" );
 
           var xScale = d3.scale.ordinal()
               .rangeRoundBands([0,width],0)
-              .domain(data.map(function(d,i) {return i;} ))
+              .domain(data.map(function(d,i) {return i;} ));
           var yScale = d3.scale.linear()
               .domain([0,d3.max(data, function(d,i) { return accessor(d,i); })])
               .range([height,0]);
@@ -118,11 +123,6 @@ title = "Charts"
               .ticks(0)
               .orient("left");
 
-          g.append("g")
-              .classed("x axis", true)
-              .attr("transform", "translate(0," + height + ")")
-              .call(xAxis);
-
           var focus = g.append("g")
               .style("display","none")
               .attr("transform","translate(5,20)");
@@ -133,8 +133,10 @@ title = "Charts"
               .classed("bar", true)
               .attr("x", function(d,i) { return xScale(i); })
               .attr("width", xScale.rangeBand())
-              .attr("y", function(d,i) { return yScale(accessor(d,i)); })
-              .attr("height", function(d,i) { return height - yScale(accessor(d,i)); });
+              .attr("y", function(d,i) { return d3.round(yScale(accessor(d,i))); })
+              .attr("height", function(d,i) { 
+                return height - d3.round(yScale(accessor(d,i))); 
+              });
 
               bars.on("mouseover", function() {
                 focus.style("display",null);
