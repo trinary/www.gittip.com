@@ -167,6 +167,18 @@ title = "Charts"
                 return height - yScale(accessor(d,i)); 
               });
 
+          var hoverBars = g.append("g").selectAll(".hoverbar")
+              .data(data)
+              .enter().append("rect")
+              .classed("hoverbar", true)
+              .attr("x",function(d,i) { return xScale(i); })
+              .attr("width",xScale.rangeBand())
+              .attr("y", 0)
+              .style({
+                opacity: 0
+              })
+              .attr("height", height);
+
           // add the flag to the document last (hidden), so it ends up on top.
           var hoverFlag = g.append("g");
           hoverFlag.style("display","none");
@@ -186,7 +198,7 @@ title = "Charts"
                 y2: 12
               })
 
-          bars.on("mouseover", function(d,i) {
+          hoverBars.on("mouseover", function(d,i) {
               hoverFlag.attr("transform","translate(" + [xScale(i),yScale(accessor(d,i)) - 10] + ")")
                   .style("display",null);
               hoverFlag.append("text")
@@ -200,7 +212,7 @@ title = "Charts"
                   .attr("transform","translate(3,11)")
                   .text(i)
           });
-          bars.on("mouseout", function() {
+          hoverBars.on("mouseout", function() {
               hoverFlag.select("text").remove();
               hoverTick.select("text").remove();
               hoverFlag.style("display","none");
