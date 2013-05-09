@@ -42,6 +42,13 @@ title = "Charts"
     .flagtext {
       font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
     }
+    .tick {
+      stroke: #614C3E;
+      stroke-width: 1px;
+    }
+    .ticktext {
+      font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
+    }
 </style>
 
 <div class="chart-wrapper">
@@ -106,7 +113,7 @@ title = "Charts"
         var outerHeight = 100;
         var outerWidth  = 480;
 
-        var margin = { top: 20, right: 20, bottom:20 , left: 0 };
+        var margin = { top: 20, right: 36, bottom:12 , left: 0 };
         var width = outerWidth - margin.right - margin.left;
         var height = outerHeight - margin.top - margin.bottom;
 
@@ -167,19 +174,38 @@ title = "Charts"
           hoverFlag.append("path")
               .classed("flag", true)
               .attr("d",flagPath(36,10,5));
+          var hoverTick = g.append("g");
+          hoverTick.style("display","none");
 
-              bars.on("mouseover", function(d,i) {
-                hoverFlag.attr("transform","translate(" + [xScale(i) - 10,yScale(accessor(d,i)) - 10] + ")")
-                    .style("display",null);
-                hoverFlag.append("text")
-                    .classed("flagtext",true)
-                    .attr("transform","translate(3,11)")
-                    .text(d3.round(accessor(d,i)));
-              });
-              bars.on("mouseout", function() {
-                hoverFlag.select("text").remove();
-                hoverFlag.style("display","none");
-              });
+          hoverTick.append("line")
+              .classed("tick",true)
+              .attr({
+                x1: 0,
+                y1: 0,
+                x2: 0,
+                y2: 12
+              })
+
+          bars.on("mouseover", function(d,i) {
+              hoverFlag.attr("transform","translate(" + [xScale(i),yScale(accessor(d,i)) - 10] + ")")
+                  .style("display",null);
+              hoverFlag.append("text")
+                  .classed("flagtext",true)
+                  .attr("transform","translate(3,11)")
+                  .text(d3.round(accessor(d,i)));
+              hoverTick.attr("transform","translate(" + [xScale(i), height] + ")")
+                  .style("display",null);
+              hoverTick.append("text")
+                  .classed("ticktext",true)
+                  .attr("transform","translate(3,11)")
+                  .text(i)
+          });
+          bars.on("mouseout", function() {
+              hoverFlag.select("text").remove();
+              hoverTick.select("text").remove();
+              hoverFlag.style("display","none");
+              hoverTick.style("display","none");
+          });
         }
         d3.json('https://www.gittip.com/about/paydays.json', function(paydays) {
 
