@@ -23,6 +23,7 @@ title = "Charts"
     rect.bar {
       fill: #2A8F79;
       stroke: 0px;
+      shape-rendering: crispEdges;
     }
     .axis path, .axis line {
       fill: none;
@@ -133,9 +134,9 @@ title = "Charts"
               .classed("bar", true)
               .attr("x", function(d,i) { return xScale(i); })
               .attr("width", xScale.rangeBand())
-              .attr("y", function(d,i) { return d3.round(yScale(accessor(d,i))); })
+              .attr("y", function(d,i) { return yScale(accessor(d,i)); })
               .attr("height", function(d,i) { 
-                return height - d3.round(yScale(accessor(d,i))); 
+                return height - yScale(accessor(d,i)); 
               });
 
               bars.on("mouseover", function() {
