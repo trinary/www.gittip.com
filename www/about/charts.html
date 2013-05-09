@@ -20,6 +20,10 @@ title = "Charts"
         line-height: 10pt;
         padding-bottom: 12pt;
     }
+    .label {
+      text-align: center;
+      font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
+    }
     rect.bar {
       fill: #2A8F79;
       stroke: 0px;
@@ -43,6 +47,7 @@ title = "Charts"
     <h2>Users</h2>
     <p class="note">Anyone who's ever created an account on Gittip</p>
     <div class="chart" id="users-"></div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper">
@@ -50,6 +55,7 @@ title = "Charts"
     <h2>Funders</h2>
     <p class="note">People who gave money to other people within Gittip</p>
     <div class="chart" id="funders-"></div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper">
@@ -57,6 +63,7 @@ title = "Charts"
     <h2>Gifts ($)</h2>
     <p class="note">Money transferred within Gittip</p>
     <div class="chart" id="volume-"></div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper">
@@ -64,6 +71,7 @@ title = "Charts"
     <h2>Cumulative Gifts ($)</h2>
     <p class="note">Money transferred within Gittip (cumulative)</p>
     <div class="chart" id="cumulative-"></div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper newline">
@@ -74,6 +82,7 @@ title = "Charts"
         href="http://blog.gittip.com/post/28158537529/why-were-you-charged-10">upped</a>
     to $10 in week 8)</p>
     <div class="chart" id="charges-"></div>
+    <div class="label">weeks</div>
 </div>
 
 <div class="chart-wrapper">
@@ -85,6 +94,7 @@ title = "Charts"
     in week 12)</p>
 
     <div class="chart" id="withdrawals-"></div>
+    <div class="label">weeks</div>
 </div>
 
 <script src="http://d3js.org/d3.v3.js"></script>
