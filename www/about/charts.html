@@ -34,11 +34,13 @@ title = "Charts"
       stroke: #000;
       shape-rendering: crispEdges;
     }
-    .tooltip > text {
-      fill: #666;
-      stroke: #666;
-      font-family: 'Lucida Mono', Monaco, monospace;
-      font-size: 8pt;
+    .flag {
+      fill: white;
+      stroke: #614C3E;
+      stroke-width: 2px;
+    }
+    .flagtext {
+      font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
     }
 </style>
 
@@ -104,9 +106,21 @@ title = "Charts"
         var outerHeight = 100;
         var outerWidth  = 480;
 
-        var margin = { top: 0, right: 20, bottom:20 , left: 0 };
+        var margin = { top: 20, right: 20, bottom:20 , left: 0 };
         var width = outerWidth - margin.right - margin.left;
         var height = outerHeight - margin.top - margin.bottom;
+
+
+        // gnarly little function to generate a "flag" with two rounded corners.
+        // See: http://www.w3.org/TR/SVG/shapes.html#RectElement for the steps to create the path
+        // here we assume rx = ry = r and only apply curves to the right side
+        // The effective width is width + r, the effective height is height + r + r
+        function flagPath(width, height, r) {
+          return "M 0 0 L " + width + " 0 A " + r + " " + r + " 0 0 1 " + 
+              (width + r) + " " + r + " L " + (width + r) + " " + height + 
+              "A " + r + " " + r + " 0 0 1 " + (width) + " " + (height + r ) + 
+              " L 0 " + (height + r) + " Z"; 
+        }
 
         function barChart(data, element, accessor) {
           var svg = d3.select(element).append("svg");
@@ -134,9 +148,6 @@ title = "Charts"
               .ticks(0)
               .orient("left");
 
-          var focus = g.append("g")
-              .style("display","none")
-              .attr("transform","translate(5,20)");
 
           var bars = g.append("g").selectAll(".bar")
               .data(data)
@@ -149,18 +160,25 @@ title = "Charts"
                 return height - yScale(accessor(d,i)); 
               });
 
-              bars.on("mouseover", function() {
-                focus.style("display",null);
-                focus.append("text")
-                  .text(d3.round(yScale.invert(d3.event.target.y.baseVal.value)))
-                  .attr({
-                    x: "0px",
-                    y: "0px"
-                  });
+          // add the flag to the document last (hidden), so it ends up on top.
+          var hoverFlag = g.append("g");
+          hoverFlag.style("display","none");
+
+          hoverFlag.append("path")
+              .classed("flag", true)
+              .attr("d",flagPath(36,10,5));
+
+              bars.on("mouseover", function(d,i) {
+                hoverFlag.attr("transform","translate(" + [xScale(i) - 10,yScale(accessor(d,i)) - 10] + ")")
+                    .style("display",null);
+                hoverFlag.append("text")
+                    .classed("flagtext",true)
+                    .attr("transform","translate(3,11)")
+                    .text(d3.round(accessor(d,i)));
               });
               bars.on("mouseout", function() {
-                focus.style("display","none");
-                focus.select("text").remove()
+                hoverFlag.select("text").remove();
+                hoverFlag.style("display","none");
               });
         }
         d3.json('https://www.gittip.com/about/paydays.json', function(paydays) {
