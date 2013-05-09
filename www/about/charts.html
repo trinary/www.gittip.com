@@ -12,7 +12,7 @@ title = "Charts"
     }
     .chart {
         position: relative;
-        height: 100px;
+        height: 130px;
     }
     .note {
         font-style: italic;
@@ -110,10 +110,10 @@ title = "Charts"
 <script>
     $(document).ready(function()
     {
-        var outerHeight = 100;
+        var outerHeight = 130;
         var outerWidth  = 480;
 
-        var margin = { top: 20, right: 36, bottom:12 , left: 0 };
+        var margin = { top: 22, right: 36, bottom:12 , left: 0 };
         var width = outerWidth - margin.right - margin.left;
         var height = outerHeight - margin.top - margin.bottom;
 
@@ -140,7 +140,7 @@ title = "Charts"
               .attr("transform","translate(" + margin.left + "," + margin.top + ")" );
 
           var xScale = d3.scale.ordinal()
-              .rangeRoundBands([0,width],0)
+              .rangeBands([0,width],0)
               .domain(data.map(function(d,i) {return i;} ));
           var yScale = d3.scale.linear()
               .domain([0,d3.max(data, function(d,i) { return accessor(d,i); })])
@@ -199,7 +199,7 @@ title = "Charts"
               })
 
           hoverBars.on("mouseover", function(d,i) {
-              hoverFlag.attr("transform","translate(" + [xScale(i),yScale(accessor(d,i)) - 10] + ")")
+              hoverFlag.attr("transform","translate(" + [xScale(i),yScale(accessor(d,i)) - 20] + ")")
                   .style("display",null);
               hoverFlag.append("text")
                   .classed("flagtext",true)
