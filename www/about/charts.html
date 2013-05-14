@@ -113,7 +113,7 @@ title = "Charts"
         var outerHeight = 130;
         var outerWidth  = 480;
 
-        var margin = { top: 22, right: 36, bottom:12 , left: 0 };
+        var margin = { top: 22, right: 36, bottom:12 , left: 3 };
         var width = outerWidth - margin.right - margin.left;
         var height = outerHeight - margin.top - margin.bottom;
 
@@ -156,18 +156,19 @@ title = "Charts"
               .orient("left");
 
           var max = d3.max(data,accessor);
-          console.log(max);
 
           var bars = g.append("g").selectAll(".bar")
               .data(data)
               .enter().append("rect")
               .classed("bar", true)
+              .classed("max", function(d,i) { return accessor(d,i) == max ? true : false; })
               .attr("x", function(d,i) { return xScale(i); })
               .attr("width", xScale.rangeBand())
               .attr("y", function(d,i) { return yScale(accessor(d,i)); })
               .attr("height", function(d,i) { 
                 return height - yScale(accessor(d,i)); 
               });
+
 
           var hoverBars = g.append("g").selectAll(".hoverbar")
               .data(data)
@@ -181,20 +182,20 @@ title = "Charts"
               })
               .attr("height", height);
 
-          // add the flag to the document last (hidden), so it ends up on top.
+
           function addFlag(d, i, klass) {
             var hoverFlag = g.append("g");
+            hoverFlag.classed(klass, true);
 
             hoverFlag.append("path")
                 .classed("flag", true)
-                .classed(klass, true)
                 .attr("d",flagPath(36,10,5));
 
             var hoverTick = g.append("g");
+            hoverTick.classed(klass,true);
 
             hoverTick.append("line")
                 .classed("tick",true)
-                .classed(klass, true)
                 .attr({
                   x1: 0,
                   y1: 0,
@@ -204,16 +205,17 @@ title = "Charts"
             hoverFlag.attr("transform","translate(" + [xScale(i),yScale(accessor(d,i)) - 20] + ")")
             hoverFlag.append("text")
                 .classed("flagtext",true)
-                .classed(klass,true)
                 .attr("transform","translate(3,11)")
                 .text(d3.round(accessor(d,i)));
             hoverTick.attr("transform","translate(" + [xScale(i), height] + ")")
             hoverTick.append("text")
                 .classed("ticktext",true)
-                .classed(klass,true)
                 .attr("transform","translate(3,11)")
                 .text(i);
           }
+
+          // Add default flags, set up mouse events.
+          bars.select(".max").each(function(d,i) { console.log(d,i,this); addFlag(d,i,"permanent"); });
 
           hoverBars.on("mouseover", function(d,i) {
             addFlag(d,i,"hover");
