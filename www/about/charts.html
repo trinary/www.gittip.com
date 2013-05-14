@@ -155,6 +155,8 @@ title = "Charts"
               .ticks(0)
               .orient("left");
 
+          var max = d3.max(data,accessor);
+          console.log(max);
 
           var bars = g.append("g").selectAll(".bar")
               .data(data)
@@ -180,43 +182,44 @@ title = "Charts"
               .attr("height", height);
 
           // add the flag to the document last (hidden), so it ends up on top.
-          var hoverFlag = g.append("g");
-          hoverFlag.style("display","none");
+          function addFlag(d, i, klass) {
+            var hoverFlag = g.append("g");
 
-          hoverFlag.append("path")
-              .classed("flag", true)
-              .attr("d",flagPath(36,10,5));
-          var hoverTick = g.append("g");
-          hoverTick.style("display","none");
+            hoverFlag.append("path")
+                .classed("flag", true)
+                .classed(klass, true)
+                .attr("d",flagPath(36,10,5));
 
-          hoverTick.append("line")
-              .classed("tick",true)
-              .attr({
-                x1: 0,
-                y1: 0,
-                x2: 0,
-                y2: 12
-              })
+            var hoverTick = g.append("g");
+
+            hoverTick.append("line")
+                .classed("tick",true)
+                .classed(klass, true)
+                .attr({
+                  x1: 0,
+                  y1: 0,
+                  x2: 0,
+                  y2: 12
+                });
+            hoverFlag.attr("transform","translate(" + [xScale(i),yScale(accessor(d,i)) - 20] + ")")
+            hoverFlag.append("text")
+                .classed("flagtext",true)
+                .classed(klass,true)
+                .attr("transform","translate(3,11)")
+                .text(d3.round(accessor(d,i)));
+            hoverTick.attr("transform","translate(" + [xScale(i), height] + ")")
+            hoverTick.append("text")
+                .classed("ticktext",true)
+                .classed(klass,true)
+                .attr("transform","translate(3,11)")
+                .text(i);
+          }
 
           hoverBars.on("mouseover", function(d,i) {
-              hoverFlag.attr("transform","translate(" + [xScale(i),yScale(accessor(d,i)) - 20] + ")")
-                  .style("display",null);
-              hoverFlag.append("text")
-                  .classed("flagtext",true)
-                  .attr("transform","translate(3,11)")
-                  .text(d3.round(accessor(d,i)));
-              hoverTick.attr("transform","translate(" + [xScale(i), height] + ")")
-                  .style("display",null);
-              hoverTick.append("text")
-                  .classed("ticktext",true)
-                  .attr("transform","translate(3,11)")
-                  .text(i)
+            addFlag(d,i,"hover");
           });
           hoverBars.on("mouseout", function() {
-              hoverFlag.select("text").remove();
-              hoverTick.select("text").remove();
-              hoverFlag.style("display","none");
-              hoverTick.style("display","none");
+            g.selectAll(".hover").remove();
           });
         }
         d3.json('https://www.gittip.com/about/paydays.json', function(paydays) {
