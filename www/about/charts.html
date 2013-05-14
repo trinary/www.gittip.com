@@ -227,6 +227,10 @@ title = "Charts"
           hoverBars.on("mouseout", function() {
             g.selectAll(".hover").remove();
           });
+          hoverBars.on("click",function(d,i) {
+            addFlag(d,i,"clicked");
+          });
+
         }
         d3.json('https://www.gittip.com/about/paydays.json', function(paydays) {
 
