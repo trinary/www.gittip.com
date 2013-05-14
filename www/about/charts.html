@@ -161,7 +161,7 @@ title = "Charts"
               .data(data)
               .enter().append("rect")
               .classed("bar", true)
-              .classed("max", function(d,i) { return accessor(d,i) == max ? true : false; })
+              .classed("max", function(d,i) { return accessor(d,i) === max ? true : false; })
               .attr("x", function(d,i) { return xScale(i); })
               .attr("width", xScale.rangeBand())
               .attr("y", function(d,i) { return yScale(accessor(d,i)); })
@@ -215,7 +215,11 @@ title = "Charts"
           }
 
           // Add default flags, set up mouse events.
-          bars.select(".max").each(function(d,i) { console.log(d,i,this); addFlag(d,i,"permanent"); });
+          bars.each(function(d,i) { 
+            if (this.classList.contains("max")) {
+              addFlag(d,i,"permanent");
+            }
+          });
 
           hoverBars.on("mouseover", function(d,i) {
             addFlag(d,i,"hover");
