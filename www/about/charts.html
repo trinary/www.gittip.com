@@ -184,12 +184,14 @@ title = "Charts"
 
 
           function addFlag(d, i, klass) {
+            var numLength = ("" + d3.round(accessor(d,i))).length;
+            var flagWidth = 13 + numLength * 3; 
             var hoverFlag = g.append("g");
             hoverFlag.classed(klass, true);
 
             hoverFlag.append("path")
                 .classed("flag", true)
-                .attr("d",flagPath(36,10,5));
+                .attr("d",flagPath(flagWidth,10,5));
 
             var hoverTick = g.append("g");
             hoverTick.classed(klass,true);
@@ -229,7 +231,6 @@ title = "Charts"
           });
           hoverBars.on("click",function(d,i) {
             var thisflag = g.selectAll(".clicked-" + i);
-            console.log(thisflag);
             if (thisflag[0].length > 0 ) { // existing flag, toggle off
               thisflag.remove()
             } else {
