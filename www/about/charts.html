@@ -208,7 +208,7 @@ title = "Charts"
             hoverFlag.attr("transform","translate(" + [xScale(i) + 1,yScale(accessor(d,i)) - 20] + ")")
             hoverFlag.append("text")
                 .classed("flagtext",true)
-                .attr("transform","translate(4,11)")
+                .attr("transform","translate(3,11)")
                 .text(d3.round(accessor(d,i)));
             hoverTick.attr("transform","translate(" + [xScale(i), height] + ")")
             hoverTick.append("text")
