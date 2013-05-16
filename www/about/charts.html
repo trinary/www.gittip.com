@@ -220,7 +220,7 @@ title = "Charts"
           // Add permanent flag on max, set up mouse events.
           bars.each(function(d,i) { 
             if (this.classList.contains("max")) {
-              addFlag(d,i,"permanent");
+              addFlag(d,i,"clicked-" + i);
             }
           });
 
