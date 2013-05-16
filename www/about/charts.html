@@ -38,6 +38,7 @@ title = "Charts"
       fill: white;
       stroke: #614C3E;
       stroke-width: 2px;
+      shape-rendering: crispEdges;
     }
     .flagtext {
       font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
@@ -169,7 +170,6 @@ title = "Charts"
                 return height - yScale(accessor(d,i)); 
               });
 
-
           var hoverBars = g.append("g").selectAll(".hoverbar")
               .data(data)
               .enter().append("rect")
@@ -183,15 +183,16 @@ title = "Charts"
               .attr("height", height);
 
 
+          // now that we have g, make a flag creator
           function addFlag(d, i, klass) {
             var numLength = ("" + d3.round(accessor(d,i))).length;
-            var flagWidth = 13 + numLength * 3; 
+            var flagWidth = numLength * 7; 
             var hoverFlag = g.append("g");
             hoverFlag.classed(klass, true);
 
             hoverFlag.append("path")
                 .classed("flag", true)
-                .attr("d",flagPath(flagWidth,10,5));
+                .attr("d",flagPath(flagWidth,12,3));
 
             var hoverTick = g.append("g");
             hoverTick.classed(klass,true);
@@ -204,10 +205,10 @@ title = "Charts"
                   x2: 0,
                   y2: 12
                 });
-            hoverFlag.attr("transform","translate(" + [xScale(i),yScale(accessor(d,i)) - 20] + ")")
+            hoverFlag.attr("transform","translate(" + [xScale(i) + 1,yScale(accessor(d,i)) - 20] + ")")
             hoverFlag.append("text")
                 .classed("flagtext",true)
-                .attr("transform","translate(3,11)")
+                .attr("transform","translate(4,11)")
                 .text(d3.round(accessor(d,i)));
             hoverTick.attr("transform","translate(" + [xScale(i), height] + ")")
             hoverTick.append("text")
@@ -216,7 +217,7 @@ title = "Charts"
                 .text(i);
           }
 
-          // Add default flags, set up mouse events.
+          // Add permanent flag on max, set up mouse events.
           bars.each(function(d,i) { 
             if (this.classList.contains("max")) {
               addFlag(d,i,"permanent");
@@ -224,11 +225,10 @@ title = "Charts"
           });
 
           hoverBars.on("mouseover", function(d,i) {
+            g.selectAll(".hover").remove();
             addFlag(d,i,"hover");
           });
-          hoverBars.on("mouseout", function() {
-            g.selectAll(".hover").remove();
-          });
+
           hoverBars.on("click",function(d,i) {
             var thisflag = g.selectAll(".clicked-" + i);
             if (thisflag[0].length > 0 ) { // existing flag, toggle off
