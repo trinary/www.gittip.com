@@ -168,7 +168,10 @@ title = "Charts"
               .attr("width", xScale.rangeBand())
               .attr("y", function(d,i) { return yScale(accessor(d,i)); })
               .attr("height", function(d,i) { 
-                return height - yScale(accessor(d,i)); 
+                if (accessor(d,i) === 0) {
+                  return height - yScale(accessor(d,i));
+                }
+                return height - yScale(accessor(d,i)) + 1; 
               });
 
           var hoverBars = g.append("g").selectAll(".hoverbar")
