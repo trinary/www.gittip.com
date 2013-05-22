@@ -144,8 +144,8 @@ title = "Charts"
               .attr("transform","translate(" + margin.left + "," + margin.top + ")" );
 
           var xScale = d3.scale.ordinal()
-              .rangeBands([0,width],0)
-              .domain(data.map(function(d,i) {return i;} ));
+              .rangeRoundBands([0,width],0,0)
+              .domain(d3.range(data.length));
           var yScale = d3.scale.linear()
               .domain([0,d3.max(data, function(d,i) { return accessor(d,i); })])
               .range([height,0]);
