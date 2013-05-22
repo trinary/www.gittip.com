@@ -12,7 +12,7 @@ title = "Charts"
     }
     .chart {
         position: relative;
-        height: 130px;
+        height: 150px;
     }
     .note {
         font-style: italic;
@@ -112,10 +112,10 @@ title = "Charts"
 <script>
     $(document).ready(function()
     {
-        var outerHeight = 130;
+        var outerHeight = 150;
         var outerWidth  = 480;
 
-        var margin = { top: 22, right: 36, bottom:12 , left: 3 };
+        var margin = { top: 22, right: 36, bottom:16 , left: 3 };
         var width = outerWidth - margin.right - margin.left;
         var height = outerHeight - margin.top - margin.bottom;
 
@@ -125,10 +125,12 @@ title = "Charts"
         // here we assume rx = ry = r and only apply curves to the right side
         // The effective width is width + r, the effective height is height + r + r
         function flagPath(width, height, r) {
-          return "M 0 0 L " + width + " 0 A " + r + " " + r + " 0 0 1 " + 
-              (width + r) + " " + r + " L " + (width + r) + " " + height + 
-              "A " + r + " " + r + " 0 0 1 " + (width) + " " + (height + r ) + 
-              " L 0 " + (height + r) + " Z"; 
+          var effWidth = width - 0.5;
+          var effHeight = height - 0.5;
+          return "M 0 0 L " + effWidth + " 0 A " + r + " " + r + " 0 0 1 " + 
+              (effWidth + r) + " " + r + " L " + (effWidth + r) + " " + effHeight + 
+              "A " + r + " " + r + " 0 0 1 " + (effWidth) + " " + (effHeight + r ) + 
+              " L 0 " + (effHeight + r) + " Z"; 
         }
 
         function barChart(data, element, accessor) {
@@ -196,7 +198,7 @@ title = "Charts"
 
             hoverFlag.append("path")
                 .classed("flag", true)
-                .attr("d",flagPath(flagWidth,12,3));
+                .attr("d",flagPath(flagWidth,16,2));
 
             var hoverTick = g.append("g");
             hoverTick.classed(klass,true);
@@ -207,14 +209,14 @@ title = "Charts"
                   x1: 0,
                   y1: 0,
                   x2: 0,
-                  y2: 12
+                  y2: 16
                 });
             hoverFlag.attr("transform","translate(" + [xScale(i) + 1,yScale(accessor(d,i)) - 20] + ")")
             hoverFlag.append("text")
                 .classed("flagtext",true)
-                .attr("transform","translate(3,11)")
+                .attr("transform","translate(3,12)")
                 .text(d3.round(accessor(d,i)));
-            hoverTick.attr("transform","translate(" + [xScale(i), height] + ")")
+            hoverTick.attr("transform","translate(" + [Math.floor(xScale(i)), height + 1] + ")")
             hoverTick.append("text")
                 .classed("ticktext",true)
                 .attr("transform","translate(3,11)")
