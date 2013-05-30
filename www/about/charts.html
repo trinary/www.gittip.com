@@ -37,8 +37,7 @@ title = "Charts"
     .flag {
       fill: white;
       stroke: #614C3E;
-      stroke-width: 2px;
-      shape-rendering: crispEdges;
+      stroke-width: 2.5px;
     }
     .flagtext {
       font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
@@ -115,7 +114,7 @@ title = "Charts"
         var outerHeight = 150;
         var outerWidth  = 480;
 
-        var margin = { top: 22, right: 36, bottom:16 , left: 3 };
+        var margin = { top: 24, right: 36, bottom:16 , left: 0 };
         var width = outerWidth - margin.right - margin.left;
         var height = outerHeight - margin.top - margin.bottom;
 
@@ -125,12 +124,12 @@ title = "Charts"
         // here we assume rx = ry = r and only apply curves to the right side
         // The effective width is width + r, the effective height is height + r + r
         function flagPath(width, height, r) {
-          var effWidth = width - 0.5;
-          var effHeight = height - 0.5;
-          return "M 0 0 L " + effWidth + " 0 A " + r + " " + r + " 0 0 1 " + 
-              (effWidth + r) + " " + r + " L " + (effWidth + r) + " " + effHeight + 
-              "A " + r + " " + r + " 0 0 1 " + (effWidth) + " " + (effHeight + r ) + 
-              " L 0 " + (effHeight + r) + " Z"; 
+          var effWidth =  width + 0.5;
+          var effHeight = height + 0.5;
+          return "M 0 0 L " + (effWidth - r) + " 0 A " + r + " " + r + " 0 0 1 " + 
+              (effWidth) + " " + r + " L " + (effWidth) + " " + (effHeight - r + 0.5) + 
+              " A " + r + " " + r + " 0 0 1 " + (effWidth - r) + " " + (effHeight + 0.5) + 
+              " L 0 " + (effHeight + 0.5) + " Z"; 
         }
 
         function barChart(data, element, accessor) {
@@ -144,20 +143,11 @@ title = "Charts"
               .attr("transform","translate(" + margin.left + "," + margin.top + ")" );
 
           var xScale = d3.scale.ordinal()
-              .rangeRoundBands([0,width],0,0)
-              .domain(d3.range(data.length));
+              .rangeRoundBands([margin.left, outerWidth - margin.right],0,0)
+              .domain([-2,-1].concat(d3.range(data.length) ));
           var yScale = d3.scale.linear()
               .domain([0,d3.max(data, function(d,i) { return accessor(d,i); })])
               .range([height,0]);
-
-          var xAxis = d3.svg.axis()
-              .scale(xScale)
-              .tickValues([])
-              .orient("bottom");
-          var yAxis = d3.svg.axis()
-              .scale(yScale)
-              .ticks(0)
-              .orient("left");
 
           var max = d3.max(data,accessor);
 
@@ -192,13 +182,13 @@ title = "Charts"
           // now that we have g, make a flag creator
           function addFlag(d, i, klass) {
             var numLength = ("" + d3.round(accessor(d,i))).length;
-            var flagWidth = numLength * 7; 
+            var flagWidth = (numLength * 6) + 4; 
             var hoverFlag = g.append("g");
             hoverFlag.classed(klass, true);
 
             hoverFlag.append("path")
                 .classed("flag", true)
-                .attr("d",flagPath(flagWidth,16,2));
+                .attr("d",flagPath(flagWidth,16,3));
 
             var hoverTick = g.append("g");
             hoverTick.classed(klass,true);
@@ -211,7 +201,7 @@ title = "Charts"
                   x2: 0,
                   y2: 16
                 });
-            hoverFlag.attr("transform","translate(" + [xScale(i) + 1,yScale(accessor(d,i)) - 20] + ")")
+            hoverFlag.attr("transform","translate(" + [xScale(i) + 1,yScale(accessor(d,i)) - 22] + ")")
             hoverFlag.append("text")
                 .classed("flagtext",true)
                 .attr("transform","translate(3,12)")
@@ -232,7 +222,9 @@ title = "Charts"
 
           hoverBars.on("mouseover", function(d,i) {
             g.selectAll(".hover").remove();
-            addFlag(d,i,"hover");
+            if (g.selectAll(".clicked-" + i)[0].length == 0) {
+              addFlag(d,i,"hover");
+            }
           });
 
           hoverBars.on("click",function(d,i) {
