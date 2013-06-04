@@ -40,6 +40,7 @@ title = "Charts"
       stroke-width: 2.5px;
     }
     .flagtext {
+      fill: #614C3E;
       font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
     }
     .tick {
@@ -48,6 +49,7 @@ title = "Charts"
       shape-rendering: crispEdges;
     }
     .ticktext {
+      fill: #614C3E;
       font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
     }
 </style>
@@ -209,7 +211,7 @@ title = "Charts"
             hoverTick.attr("transform","translate(" + [Math.floor(xScale(i)), height + 1] + ")")
             hoverTick.append("text")
                 .classed("ticktext",true)
-                .attr("transform","translate(3,11)")
+                .attr("transform","translate(6,15)")
                 .text(i);
           }
 
