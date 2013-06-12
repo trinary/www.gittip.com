@@ -34,6 +34,9 @@ title = "Charts"
       stroke: #000;
       shape-rendering: crispEdges;
     }
+    .flag-group {
+      pointer-events: none;
+    }
     .flag {
       fill: white;
       stroke: #614C3E;
@@ -187,6 +190,7 @@ title = "Charts"
             var flagWidth = (numLength * 6) + 4; 
             var hoverFlag = g.append("g");
             hoverFlag.classed(klass, true);
+            hoverFlag.classed("flag-group",true);
 
             hoverFlag.append("path")
                 .classed("flag", true)
@@ -227,6 +231,10 @@ title = "Charts"
             if (g.selectAll(".clicked-" + i)[0].length == 0) {
               addFlag(d,i,"hover");
             }
+          });
+
+          hoverBars.on("mouseout", function(d,i) {
+            g.selectAll(".hover").remove();
           });
 
           hoverBars.on("click",function(d,i) {
