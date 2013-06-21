@@ -49,6 +49,7 @@ title = "Charts"
     .flagtext {
       fill: #614C3E;
       font: normal 7pt/7pt "Lucida Mono", Monaco, monospace;
+      text-anchor: middle;
     }
     .tick {
       stroke: #614C3E;
@@ -191,7 +192,7 @@ title = "Charts"
           // now that we have g, make a flag creator
           function addFlag(d, i, klass) {
             var numLength = ("" + d3.round(accessor(d,i))).length;
-            var flagWidth = (numLength * 6) + 6; 
+            var flagWidth = (numLength * 6) + 5; 
             var hoverFlag = g.append("g");
             hoverFlag.classed(klass, true);
             hoverFlag.classed("flag-group",true);
@@ -202,7 +203,7 @@ title = "Charts"
                 .attr("d",flagPath(flagWidth,16,3));
             hoverFlag.append("text")
                 .classed("flagtext",true)
-                .attr("transform","translate(3.5,12)")
+                .attr("transform","translate(" + (flagWidth / 2 - 0.5) + " ,12)")
                 .text(d3.round(accessor(d,i)));
 
             var hoverTick = g.append("g");
