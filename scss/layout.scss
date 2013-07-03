@@ -43,6 +43,32 @@
     }
 }
 
+.grid-container {
+    .grid {
+        dl { padding: 0px; }
+        dt {
+          margin: 0px;
+          border-bottom: 2px solid $light-gray;
+          padding: 10px 0px 10px 0px;
+        }
+        dl { 
+          margin: 0px;
+          padding: 10px;
+        }
+        float:left;
+        margin: 8px 8px 0px 0px;
+        width: 460px;
+        height: 180px;
+        min-height: fill-available;
+        border: 2px solid $light-gray;
+        @include border-radius(3px);
+    }
+}
+
+.listbox {
+
+}
+
 #hero {
     background: transparent url('hero-bg.png') top left repeat;
     border: 1px solid $light-gray;
